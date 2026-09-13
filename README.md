@@ -16,43 +16,67 @@
 - 反証
 - 圧縮命題
 
-## セットアップ
+## ローカル起動
 
 Node.js 22以上が必要です。
 
 ```bash
 npm install
 cp .env.example .env
-```
-
-`.env` に OpenAI API キーを設定します。
-
-```env
-OPENAI_API_KEY=your_api_key_here
-OPENAI_MODEL=gpt-5.6-luna
-PORT=3000
-```
-
-起動します。
-
-```bash
 npm run dev
 ```
 
 ブラウザで `http://localhost:3000` を開きます。
 
-## GitHubに新規リポジトリとして作る場合
+OpenAIを使う場合は `.env` に次を設定します。
 
-GitHub CLIを使える環境なら、このディレクトリで次を実行できます。
-
-```bash
-git init
-git add .
-git commit -m "feat: initialize EXIT COST bot"
-gh repo create exit-cost-bot --public --source=. --remote=origin --push
+```env
+OPENAI_API_KEY=your_api_key_here
+OPENAI_MODEL=gpt-5.6-luna
 ```
 
-privateにしたい場合は `--public` を `--private` に変更してください。
+`.env` は `.gitignore` に含まれているため、実キーをGitHubへコミットしないでください。
+
+## 公開するときの保護
+
+公開環境では最低限、認証を有効にしてください。
+
+```env
+REQUIRE_AUTH=true
+APP_USERNAME=exit
+APP_PASSWORD=十分に長いパスワード
+RATE_LIMIT_MAX=20
+RATE_LIMIT_WINDOW_MINUTES=10
+```
+
+`REQUIRE_AUTH=true` の状態で `APP_PASSWORD` が未設定なら、保護対象の画面・APIは利用できません。
+
+`/health` だけはデプロイ先の死活監視用に認証なしで公開されます。APIキーなどの秘密情報は返しません。
+
+レート制限は単一プロセス向けの簡易実装です。大規模公開する場合はRedis等の共有ストアを使う方式へ変更してください。
+
+## Self-hosted LLM
+
+OpenAI互換APIを提供するvLLM、Ollama等に接続できます。`LLM_BASE_URL` を設定すると、OpenAI Responses APIではなくOpenAI互換のChat Completionsを使います。
+
+```env
+LLM_BASE_URL=https://your-llm-server.example/v1
+LLM_API_KEY=your_internal_token
+LLM_MODEL=your-model-name
+```
+
+ローカルのOllama等で認証が不要な場合、`LLM_API_KEY` は空でも構いません。
+
+## Render等へデプロイする場合
+
+リポジトリには `render.yaml` を含めています。Render側のEnvironment Variables / Secretsに、少なくとも次を登録してください。
+
+```text
+OPENAI_API_KEY   または LLM_BASE_URL / LLM_API_KEY
+APP_PASSWORD
+```
+
+秘密情報はGitHubのコードへ書かず、ホスティングサービス側のSecret / Environment Variableとして保存します。
 
 ## 設計原則
 
