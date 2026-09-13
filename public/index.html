@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#111111" />
+  <title>EXIT COST</title>
+  <link rel="stylesheet" href="/style.css" />
+</head>
+<body>
+  <main class="shell">
+    <header>
+      <p class="eyebrow">STRUCTURAL ANALYSIS BOT</p>
+      <h1>EXIT COST</h1>
+      <p class="lead">入口ではなく、出口を見る。</p>
+    </header>
+
+    <section class="card input-card">
+      <label for="caseText">分析する事例</label>
+      <textarea id="caseText" maxlength="12000" placeholder="例：無料で始められるサービスだが、長年使うほどデータ移行が困難になり、解約すると業務履歴を失う。"></textarea>
+      <div class="controls">
+        <span id="count">0 / 12000</span>
+        <button id="analyze">分析する</button>
+      </div>
+    </section>
+
+    <section class="card output-card" aria-live="polite">
+      <div class="output-head">
+        <h2>分析</h2>
+        <button id="copy" class="secondary" disabled>コピー</button>
+      </div>
+      <div id="status" class="status">事例を入力してください。</div>
+      <pre id="output"></pre>
+    </section>
+
+    <footer>
+      <p>支配とは、入口を閉じることではなく、出口を閉じることで成立する。</p>
+    </footer>
+  </main>
+
+  <script type="module" src="/app.js"></script>
+</body>
+</html>
