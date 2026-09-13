@@ -1,0 +1,23 @@
+services:
+  - type: web
+    name: exit-cost-bot
+    runtime: node
+    plan: free
+    buildCommand: npm install
+    startCommand: npm start
+    healthCheckPath: /health
+    envVars:
+      - key: REQUIRE_AUTH
+        value: "true"
+      - key: APP_USERNAME
+        value: exit
+      - key: APP_PASSWORD
+        sync: false
+      - key: OPENAI_API_KEY
+        sync: false
+      - key: OPENAI_MODEL
+        value: gpt-5.6-luna
+      - key: RATE_LIMIT_MAX
+        value: "20"
+      - key: RATE_LIMIT_WINDOW_MINUTES
+        value: "10"
